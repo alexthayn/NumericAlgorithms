@@ -37,7 +37,6 @@ def PLUS2(a,b):
 #Fucntion that takes in 3 one-bit numbers and returns a two bit sum of the three
 def PLUS(a,b,c = '0'):
         sum = PLUS2(a,b)
-        print sum
         if(c == '0'):
                 return sum
         if sum == '00':
@@ -48,8 +47,26 @@ def PLUS(a,b,c = '0'):
                 return '11'
 
 #Find the sum of a binary number of any length
-#def SUM(a,b)
-        
+def SUM(a,b):        
+        maxAnswerLength = max(len(a), len(b)) + 1
+        a = padWithZeroes(REVERSE(a), maxAnswerLength)
+        b = padWithZeroes(REVERSE(b), maxAnswerLength)
+        print(a,b)
+
+        answerStr = []*maxAnswerLength
+        i = 0
+        carry = '0'
+        while(i < maxAnswerLength-1):
+                sum = PLUS(a[i], b[i], carry)
+                answerStr.append(sum[0])
+                carry = sum[1]
+                i+=1
+        answerStr.append(carry)
+        return ''.join(answerStr)
+
+def padWithZeroes(str, length):
+        zeroes = '0' * (length - len(str))
+        return str + zeroes
 
 def test_and():
         assert AND('0','0') == '0'
@@ -89,3 +106,15 @@ def test_plus3():
         assert REVERSE(PLUS('0','1')) == '01'
         assert REVERSE(PLUS('1','0')) == '01'
         assert REVERSE(PLUS('1','1')) == '10'
+
+def test_sum():
+        assert REVERSE(SUM('01','01')) == '010'
+        assert REVERSE(SUM('100','1')) == '0101'
+        assert REVERSE(SUM('110101010', '1011')) == '0110110101'
+        assert REVERSE(SUM('110101010','11011010110110011')) == '011011011101011101'
+
+
+def test_padWithZeroes():
+        assert padWithZeroes('1', 4) == '1000'
+
+print(REVERSE(SUM('10','1')))
